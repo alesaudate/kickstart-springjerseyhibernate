@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd">
+	
+	<aop:aspectj-autoproxy />
+	<context:annotation-config />
+	
+	<security:http entry-point-ref="restAuthenticationEntryPoint">
+		<security:intercept-url pattern="/**" access="ROLE_USER" />
+		<security:custom-filter ref="myFilter" position="FORM_LOGIN_FILTER"/>
+		<security:http-basic/>
+	</security:http>
+
+	<bean id="restAuthenticationEntryPoint" class="com.alesaudate.samples.springjersey.services.RESTAuthenticationEntryPoint" />
+
+	<bean id="myFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+		<property name="authenticationManager" ref="authenticationManager" />
+	</bean>	
+	
+	<security:global-method-security pre-post-annotations="enabled" />
+
+	<bean name="http403ForbiddenEntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint" />
+
+	
+	<security:authentication-manager alias="authenticationManager">
+		<security:authentication-provider>
+			<security:user-service>
+				<security:user name="alexandre" password="123" authorities="ROLE_USER" />
+				<security:user name="admin" password="admin" authorities="ROLE_USER, ROLE_ADMIN"/>
+			</security:user-service>
+		</security:authentication-provider>
+	</security:authentication-manager>
+	
+</beans>
