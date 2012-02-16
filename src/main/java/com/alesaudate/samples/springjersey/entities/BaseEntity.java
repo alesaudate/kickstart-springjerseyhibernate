@@ -2,6 +2,7 @@ package com.alesaudate.samples.springjersey.entities;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,6 +21,7 @@ public abstract class BaseEntity {
 	
 	
 	@Temporal(TemporalType.TIMESTAMP)
+	@Column(updatable=false)
 	private Date creationDate = new Date();
 	
 	@Temporal(TemporalType.TIMESTAMP)

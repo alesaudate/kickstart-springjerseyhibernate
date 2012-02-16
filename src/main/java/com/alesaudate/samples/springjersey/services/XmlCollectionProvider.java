@@ -45,6 +45,7 @@ public class XmlCollectionProvider implements MessageBodyWriter<Collection<?>> {
 		return -1L;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void writeTo(Collection<?> t, Class<?> type, Type genericType,
 			Annotation[] annotations, MediaType mediaType,
 			MultivaluedMap<String, Object> httpHeaders,

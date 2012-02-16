@@ -7,14 +7,14 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.alesaudate.samples.springjersey.entities.BaseEntity;
+import com.alesaudate.samples.springjersey.entities.HATEOASEntity;
 
 
 @Entity
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.PROPERTY)
-public class Person extends BaseEntity {
+public class Person extends HATEOASEntity {
 	
 	private String name;
 	

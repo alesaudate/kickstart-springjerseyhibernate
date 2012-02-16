@@ -3,7 +3,12 @@ package com.alesaudate.samples.springjersey.persistence;
 import java.util.Collection;
 import java.util.Date;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
+import javax.persistence.Query;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.jpa.JpaCallback;
 import org.springframework.orm.jpa.JpaTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,9 +21,17 @@ public abstract class JpaDao<T extends BaseEntity> extends GenericDao<T> {
 	
 	private Class<T> managedClass;
 	
+	private int pageSize = 20;
+	
 	public JpaDao(Class<T> managedClass) {
 		this.managedClass = managedClass;
 	}
+	
+	public JpaDao(Class<T> managedClass, JpaTemplate jpaTemplate) {
+		this.managedClass = managedClass;
+		this.jpaTemplate = jpaTemplate;
+	}
+	
 	
 	@Transactional
 	public T create(T entity) {
@@ -41,13 +54,26 @@ public abstract class JpaDao<T extends BaseEntity> extends GenericDao<T> {
 		return this.jpaTemplate.find(query.toString());
 	}
 	
+	@SuppressWarnings("unchecked")
+	public Collection<T> retrieve(final int pageNumber) {
+		final StringBuilder query = new StringBuilder("select entity from ").append(managedClass.getSimpleName()).append(" entity where entity.active=true");
+		return this.jpaTemplate.executeFind(new JpaCallback<Collection<T>>() {
+			@Override
+			public Collection<T> doInJpa(EntityManager arg0) throws PersistenceException {
+				Query jpaQuery = arg0.createQuery(query.toString()).setFirstResult(pageNumber * getPageSize()).setMaxResults(getPageSize());
+				return jpaQuery.getResultList();
+			}
+		});
+		
+		
+	}
+	
 	
 	@Transactional
 	public T update(T entity) {
 		
 		entity.setUpdateDate(new Date());
-		entity = this.jpaTemplate.merge(entity);
-		this.jpaTemplate.flush();
+		jpaTemplate.merge(entity);
 		return entity;
 	}
 	
@@ -57,6 +83,17 @@ public abstract class JpaDao<T extends BaseEntity> extends GenericDao<T> {
 		//Doesn't really delete, only deactivate it
 		entity.setActive(false);
 		update(entity);
+	}
+	
+	
+
+	
+	public int getPageSize() {
+		return pageSize;
+	}
+	
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
 	}
 
 }
