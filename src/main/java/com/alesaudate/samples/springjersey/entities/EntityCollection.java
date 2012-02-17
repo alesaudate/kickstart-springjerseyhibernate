@@ -2,7 +2,6 @@ package com.alesaudate.samples.springjersey.entities;
 
 import java.io.StringWriter;
 import java.util.Collection;
-import java.util.HashSet;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -17,7 +16,7 @@ public abstract class EntityCollection<T> implements HATEOASEntity{
 	
 	private Collection<T> entities;
 	
-	private Collection<Link> links = new HashSet<Link>();
+	private Collection<Link> links;
 	
 	
 	@XmlElement(name="link", namespace="http://www.w3.org/1999/xlink")

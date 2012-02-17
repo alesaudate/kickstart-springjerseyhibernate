@@ -19,4 +19,13 @@ public class People extends EntityCollection<Person> {
 		return super.getEntities();
 	}
 	
+	
+	/*
+	 * Overriden to prevent JAXB's NPE
+	 */
+	@Override
+	public void setEntities(Collection<Person> entities) {
+		// TODO Auto-generated method stub
+		super.setEntities(entities);
+	}
 }
