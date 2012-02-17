@@ -11,10 +11,17 @@
 	<aop:aspectj-autoproxy />
 	<context:annotation-config />
 	
+	
+	<!-- A configuração abaixo pode ser utilizada para desabilitar o login via formulário - numa aplicação 100% REST, é o melhor a ser feito. -->
+	<!-- 
 	<security:http entry-point-ref="restAuthenticationEntryPoint">
 		<security:intercept-url pattern="/**" access="ROLE_USER" />
 		<security:custom-filter ref="myFilter" position="FORM_LOGIN_FILTER"/>
 		<security:http-basic/>
+	</security:http> -->
+	
+	<security:http auto-config="true">
+		<security:intercept-url pattern="/**" access="ROLE_USER" />
 	</security:http>
 
 	<bean id="restAuthenticationEntryPoint" class="com.alesaudate.samples.springjersey.services.RESTAuthenticationEntryPoint" />

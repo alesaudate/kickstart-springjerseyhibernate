@@ -18,17 +18,20 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import com.alesaudate.samples.springjersey.entities.EntityCollection;
 import com.alesaudate.samples.springjersey.entities.HATEOASEntity;
 import com.alesaudate.samples.springjersey.persistence.GenericDao;
 
 
-@Consumes(MediaType.APPLICATION_XML) //Could easily be changed to JSON
+@Consumes(MediaType.APPLICATION_XML)
 @Produces(MediaType.APPLICATION_XML)
-public abstract class BaseService<T extends HATEOASEntity> {
+public abstract class BaseService<T extends HATEOASEntity, C extends EntityCollection<T>> {
 	
 	
 	
 	private GenericDao<T> dao;
+	
+	private Class<C> collectionType;
 	
 	public GenericDao<T> getDao() {
 		return dao;
@@ -38,6 +41,9 @@ public abstract class BaseService<T extends HATEOASEntity> {
 		this.dao = dao;
 	}
 	
+	public BaseService (Class<C> collectionType) {
+		this.collectionType = collectionType;
+	}
 	
 	@POST
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -56,7 +62,7 @@ public abstract class BaseService<T extends HATEOASEntity> {
 	public Response retrieve(@PathParam("id") Long id) {
 		T entity = dao.retrieve(id);
 		if (entity != null) {
-			entity.createSelfLink();
+			entity.createStandardLinks();
 			return Response.ok(entity).build();
 		}
 		
@@ -65,20 +71,19 @@ public abstract class BaseService<T extends HATEOASEntity> {
 	
 	
 	@GET
-	@com.alesaudate.samples.springjersey.services.Collection
 	@PreAuthorize("hasRole('ROLE_USER')")
-	public Collection<T> retrieve(@QueryParam("page") int page) {
+	public C retrieve(@QueryParam("page") int page) {
 		Collection<T> entities = dao.retrieve(page);
 		for (T entity : entities) {
-			entity.createSelfLink();
+			entity.createStandardLinks();
 		}
-		return entities;
+		return encapsulateEntities(entities);
 	}	
 	
 	@PUT
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public Response update(T entity) {
-		if (entity == null) {
+		if (entity == null || entity.getId() == null) {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		dao.update(entity);
@@ -109,6 +114,22 @@ public abstract class BaseService<T extends HATEOASEntity> {
 		delete(entity);
 		return Response.ok().build();
 	}
+	
+	protected C encapsulateEntities(Collection<T> entities) {
+		try {
+			C collection = collectionType.newInstance();
+			collection.setEntities(entities);
+			return collection;
+		
+		}
+		catch (Exception e) {
+			//As every 'C' must have a default constructor
+			//for JAXB, then we can be pretty confident that
+			//it has a no-args constructor
+			throw new RuntimeException(e);
+		}
+	}
+	
 	
 	
 }

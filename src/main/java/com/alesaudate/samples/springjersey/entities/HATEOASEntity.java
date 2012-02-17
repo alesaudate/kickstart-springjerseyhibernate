@@ -27,6 +27,12 @@ public abstract class HATEOASEntity extends BaseEntity{
 		return this;
 	}
 	
+	
+	//The purpose of this method is to be overriden
+	public void createStandardLinks() {
+		createSelfLink();
+	}
+	
 	public void createSelfLink() {
 		addLink(new Link(UriBuilder.fromPath("/" + getId()).build().toASCIIString(), "self"));
 	}
