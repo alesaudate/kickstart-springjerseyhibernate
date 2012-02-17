@@ -18,6 +18,7 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import com.alesaudate.samples.springjersey.entities.BaseEntity;
 import com.alesaudate.samples.springjersey.entities.EntityCollection;
 import com.alesaudate.samples.springjersey.entities.HATEOASEntity;
 import com.alesaudate.samples.springjersey.persistence.GenericDao;
@@ -25,7 +26,7 @@ import com.alesaudate.samples.springjersey.persistence.GenericDao;
 
 @Consumes(MediaType.APPLICATION_XML)
 @Produces(MediaType.APPLICATION_XML)
-public abstract class BaseService<T extends HATEOASEntity, C extends EntityCollection<T>> {
+public abstract class BaseService<T extends BaseEntity & HATEOASEntity, C extends EntityCollection<T>> {
 	
 	
 	

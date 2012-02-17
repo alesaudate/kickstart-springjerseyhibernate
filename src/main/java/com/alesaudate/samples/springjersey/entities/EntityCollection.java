@@ -5,14 +5,13 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
 
-@XmlAccessorType(XmlAccessType.PROPERTY)
-public abstract class EntityCollection<T> {
+@XmlAccessorType(XmlAccessType.NONE)
+public abstract class EntityCollection<T> implements HATEOASEntity{
 	
 	
 	private Collection<T> entities;
@@ -38,16 +37,29 @@ public abstract class EntityCollection<T> {
 	}
 	
 	@Override
+	public HATEOASEntity addLink(Link link) {
+		links.add(link);
+		return this;
+	}
+
+	@Override
+	public void createStandardLinks() {
+		
+	}
+
+	
+	@Override
 	public String toString() {
 		try {
 			JAXBContext context = JAXBContext.newInstance(getClass());
 			StringWriter writer = new StringWriter();
 			context.createMarshaller().marshal(this, writer);
 			return writer.getBuffer().toString();
-		} catch (JAXBException e) {
+		} catch (Exception e) {
 			return super.toString();
 		}
 		
 	}
 
+	
 }
