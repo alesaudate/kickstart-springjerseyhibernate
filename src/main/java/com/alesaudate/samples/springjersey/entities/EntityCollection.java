@@ -8,9 +8,10 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 
-@XmlAccessorType(XmlAccessType.NONE)
+@XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
 public abstract class EntityCollection<T> implements HATEOASEntity{
 	
 	
@@ -28,6 +29,9 @@ public abstract class EntityCollection<T> implements HATEOASEntity{
 		this.links = links;
 	}
 	
+	
+	//Must be overriden
+	@XmlTransient 
 	public Collection<T> getEntities() {
 		return entities;
 	}

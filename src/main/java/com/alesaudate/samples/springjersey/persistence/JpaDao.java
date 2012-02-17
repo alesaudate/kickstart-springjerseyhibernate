@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alesaudate.samples.springjersey.entities.BaseEntity;
 
-public abstract class JpaDao<T extends BaseEntity> extends GenericDao<T> {
+public abstract class JpaDao <T extends BaseEntity> extends GenericDao<T> {
 	
 	@Autowired
 	private JpaTemplate jpaTemplate;
