@@ -19,12 +19,12 @@ public abstract class BaseTestClient extends JerseyTest {
 	
 	public BaseTestClient() {
 		super(new WebAppDescriptor.Builder("com.alesaudate.samples")
-        .contextPath("/springjerseyhibernate")
+        .contextPath("/springhibernate")
         .contextParam("contextConfigLocation", "/applicationContext.xml")
         .servletClass(SpringServlet.class)
         .contextListenerClass(ContextLoaderListener.class)
         .build());
-		this.contextPath = "/springjerseyhibernate";
+		this.contextPath = "/springhibernate";
 	}
 	
 	protected String getPath() {

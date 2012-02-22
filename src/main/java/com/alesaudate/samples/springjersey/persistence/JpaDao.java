@@ -21,7 +21,7 @@ public abstract class JpaDao <T extends BaseEntity> extends GenericDao<T> {
 	
 	private Class<T> managedClass;
 	
-	private int pageSize = 20;
+	
 	
 	public JpaDao(Class<T> managedClass) {
 		this.managedClass = managedClass;
@@ -69,6 +69,21 @@ public abstract class JpaDao <T extends BaseEntity> extends GenericDao<T> {
 	}
 	
 	
+	@Override
+	public long count() {
+		final StringBuilder query = new StringBuilder("select count(entity) from ").append(managedClass.getSimpleName()).append(" entity where entity.active=true");
+		return this.jpaTemplate.execute(new JpaCallback<Long>() {
+			@Override
+			public Long doInJpa(EntityManager em)
+					throws PersistenceException {
+				Query jpaQuery = em.createQuery(query.toString());
+				return (Long)jpaQuery.getSingleResult();
+			}
+		});
+		
+	}
+	
+	
 	@Transactional
 	public T update(T entity) {
 		
@@ -88,12 +103,5 @@ public abstract class JpaDao <T extends BaseEntity> extends GenericDao<T> {
 	
 
 	
-	public int getPageSize() {
-		return pageSize;
-	}
 	
-	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize;
-	}
-
 }

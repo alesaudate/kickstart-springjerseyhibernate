@@ -1,5 +1,8 @@
 package com.alesaudate.samples.springjersey.services;
 
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URLDecoder;
 import java.util.Collection;
 
 import javax.ws.rs.Consumes;
@@ -11,8 +14,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilderException;
+import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 
@@ -21,6 +27,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import com.alesaudate.samples.springjersey.entities.BaseEntity;
 import com.alesaudate.samples.springjersey.entities.EntityCollection;
 import com.alesaudate.samples.springjersey.entities.HATEOASEntity;
+import com.alesaudate.samples.springjersey.entities.Link;
 import com.alesaudate.samples.springjersey.persistence.GenericDao;
 
 
@@ -73,13 +80,34 @@ public abstract class BaseService<T extends BaseEntity & HATEOASEntity, C extend
 	
 	@GET
 	@PreAuthorize("hasRole('ROLE_USER')")
-	public C retrieve(@QueryParam("page") int page) {
+	public C retrieve(@QueryParam("page") int page, @Context UriInfo uriInfo) throws UnsupportedEncodingException, IllegalArgumentException, UriBuilderException {
 		Collection<T> entities = dao.retrieve(page);
 		for (T entity : entities) {
 			entity.createStandardLinks();
 		}
-		return encapsulateEntities(entities);
+		C collection = encapsulateEntities(entities);
+		long totalResults = dao.count();
+		int pageSize = dao.getPageSize();
+		
+		int totalPages = (int)(totalResults / pageSize);
+		
+		collection.addLink(buildPageLink(totalPages, "lastPage", uriInfo));
+		
+		if (page < totalPages) {
+			collection.addLink(buildPageLink(page + 1,  "nextPage", uriInfo));
+		}
+		
+		if (page > 0) {
+			collection.addLink(buildPageLink(page - 1, "prevPage", uriInfo));
+		}
+		
+		return collection;
 	}	
+	
+	
+	private Link buildPageLink(int pageNumber, String rel, UriInfo uriInfo) throws UnsupportedEncodingException, IllegalArgumentException, UriBuilderException {
+		return new Link(URLDecoder.decode(UriBuilder.fromPath(uriInfo.getPath() + "?page=" + pageNumber).build().toString(), "UTF-8"), rel);
+	}
 	
 	@PUT
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
