@@ -19,4 +19,8 @@ public class People extends EntityCollection<Person> {
 		return super.getEntities();
 	}
 	
+	@Override
+	public void setEntities(Collection<Person> entities) {
+		super.setEntities(entities);
+	}
 }

@@ -156,8 +156,8 @@ public class PersonClientTest extends BaseTestClient{
 	
 	
 	/*
-	 * Para ver a aplicação em funcionamento, inicialize o conteiner com a aplicação e, em seguida,
-	 * rode este método. Na sequencia, visite as seguintes URL's (pelo browser):
+	 * Para ver a aplicaï¿½ï¿½o em funcionamento, inicialize o conteiner com a aplicaï¿½ï¿½o e, em seguida,
+	 * rode este mï¿½todo. Na sequencia, visite as seguintes URL's (pelo browser):
 	 * 
 	 * http://localhost:8080/springjerseyhibernate/person/1
 	 * http://localhost:8080/springjerseyhibernate/person/1/portrait
@@ -177,7 +177,7 @@ public class PersonClientTest extends BaseTestClient{
 						return getNext().handle(cr);
 					}
 				});
-				return client.resource("http://localhost:8080/springjerseyhibernate/person");
+				return client.resource("http://localhost:8081/springhibernate/person");
 			}
 		}.testAddPortrait();
 	}
