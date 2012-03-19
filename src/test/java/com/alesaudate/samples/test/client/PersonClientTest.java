@@ -156,11 +156,11 @@ public class PersonClientTest extends BaseTestClient{
 	
 	
 	/*
-	 * Para ver a aplica��o em funcionamento, inicialize o conteiner com a aplica��o e, em seguida,
+	 * Para ver a aplicação em funcionamento, inicialize o conteiner com a aplica��o e, em seguida,
 	 * rode este m�todo. Na sequencia, visite as seguintes URL's (pelo browser):
 	 * 
-	 * http://localhost:8080/springjerseyhibernate/person/1
-	 * http://localhost:8080/springjerseyhibernate/person/1/portrait
+	 * http://localhost:8080/springhibernate/person/1
+	 * http://localhost:8080/springhibernate/person/1/portrait
 	 */
 	public static void main(String[] args) throws IOException {
 		new PersonClientTest() {
@@ -177,7 +177,7 @@ public class PersonClientTest extends BaseTestClient{
 						return getNext().handle(cr);
 					}
 				});
-				return client.resource("http://localhost:8081/springhibernate/person");
+				return client.resource("http://localhost:8080/springhibernate/person");
 			}
 		}.testAddPortrait();
 	}
