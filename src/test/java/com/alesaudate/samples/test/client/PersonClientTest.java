@@ -156,8 +156,11 @@ public class PersonClientTest extends BaseTestClient{
 	
 	
 	/*
-	 * Para ver a aplicação em funcionamento, inicialize o conteiner com a aplica��o e, em seguida,
-	 * rode este m�todo. Na sequencia, visite as seguintes URL's (pelo browser):
+	 * In order to see the app running, initialize the container with this app
+	 * (you may use mvn jetty:run), and, next, run this method. 
+	 * 
+	 * Then, visit the following URL's (on browser - you will need to use 
+	 * username and password. Use admin - admin):
 	 * 
 	 * http://localhost:8080/springhibernate/person/1
 	 * http://localhost:8080/springhibernate/person/1/portrait
@@ -177,7 +180,7 @@ public class PersonClientTest extends BaseTestClient{
 						return getNext().handle(cr);
 					}
 				});
-				return client.resource("http://localhost:8080/springhibernate/person");
+				return client.resource("http://localhost:8080" + CONTEXT_PATH + "/person");
 			}
 		}.testAddPortrait();
 	}

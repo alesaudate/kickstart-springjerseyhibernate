@@ -1,5 +1,9 @@
 package com.alesaudate.samples.test.client;
 
+import java.net.URI;
+
+import javax.ws.rs.core.UriBuilder;
+
 import org.springframework.web.context.ContextLoaderListener;
 
 import com.sun.jersey.api.client.WebResource;
@@ -15,20 +19,21 @@ import com.sun.jersey.test.framework.spi.container.grizzly.web.GrizzlyWebTestCon
 
 public abstract class BaseTestClient extends JerseyTest {
 	
-	private String contextPath;
+	
+	
+	public static final String CONTEXT_PATH = "/springhibernate";
 	
 	public BaseTestClient() {
 		super(new WebAppDescriptor.Builder("com.alesaudate.samples")
-        .contextPath("/springhibernate")
+        .contextPath(CONTEXT_PATH)
         .contextParam("contextConfigLocation", "/applicationContext.xml")
         .servletClass(SpringServlet.class)
         .contextListenerClass(ContextLoaderListener.class)
         .build());
-		this.contextPath = "/springhibernate";
 	}
 	
 	protected String getPath() {
-		return super.getBaseURI().toASCIIString() + this.contextPath;
+		return super.getBaseURI().toASCIIString() + CONTEXT_PATH;
 	}
 	
 	@Override
@@ -37,6 +42,12 @@ public abstract class BaseTestClient extends JerseyTest {
 		return new GrizzlyWebTestContainerFactory();
 	}
 	
+	@Override
+	protected URI getBaseURI() {
+		
+		return UriBuilder.fromUri("http://localhost/")
+                .port(getPort(8080)).build();
+	}
 	
 	@Override
 	public WebResource resource() {
