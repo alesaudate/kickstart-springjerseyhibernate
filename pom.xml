@@ -7,7 +7,7 @@
 	<packaging>war</packaging>
 
 	<properties>
-		<spring.version>3.0.5.RELEASE</spring.version>
+		<spring.version>5.5.7</spring.version>
 		<jersey.version>1.9</jersey.version>
 	</properties>
 
